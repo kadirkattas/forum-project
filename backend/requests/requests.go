@@ -155,6 +155,12 @@ func RegisterRequest(apiURL string, email string, userName string, password stri
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		bodyString := string(bodyBytes)
+		return fmt.Errorf("error register: %s", bodyString)
+	}
+
 	return nil
 }
 
