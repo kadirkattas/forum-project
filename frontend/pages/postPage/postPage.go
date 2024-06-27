@@ -44,7 +44,7 @@ func PostPageCreateComment(w http.ResponseWriter, r *http.Request) {
 
 	cookie, cookieErr := r.Cookie("session_token")
 	if cookieErr != nil {
-		http.Error(w, "ERROR: You are not authorized to create post", http.StatusUnauthorized)
+		http.Error(w, "ERROR: You are not authorized to create comment", http.StatusUnauthorized)
 		return
 	}
 
@@ -69,7 +69,7 @@ func PostPageUpVote(w http.ResponseWriter, r *http.Request) {
 
 	cookie, cookieErr := r.Cookie("session_token")
 	if cookieErr != nil {
-		http.Error(w, "ERROR: You are not authorized to create post", http.StatusUnauthorized)
+		http.Error(w, "ERROR: You are not authorized to up vote", http.StatusUnauthorized)
 		return
 	}
 
@@ -94,7 +94,7 @@ func PostPageDownVote(w http.ResponseWriter, r *http.Request) {
 
 	cookie, cookieErr := r.Cookie("session_token")
 	if cookieErr != nil {
-		http.Error(w, "ERROR: You are not authorized to create post", http.StatusUnauthorized)
+		http.Error(w, "ERROR: You are not authorized to down vote", http.StatusUnauthorized)
 		return
 	}
 
