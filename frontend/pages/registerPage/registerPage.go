@@ -19,7 +19,7 @@ func RegisterPage(w http.ResponseWriter, r *http.Request) {
 
 		err := requests.RegisterRequest(registerApiUrl, email, userName, password)
 		if err != nil {
-			http.Error(w, "ERROR: Bad request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		http.Redirect(w, r, "http://localhost:8080/login", http.StatusSeeOther)

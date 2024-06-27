@@ -24,7 +24,7 @@ func CreatePostPage(w http.ResponseWriter, r *http.Request) {
 
 		err := requests.CreatePostRequest(createPostApiUrl, title, content, categoryDatas, cookie.Value)
 		if err != nil {
-			http.Error(w, "ERROR: Bad request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

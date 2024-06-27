@@ -18,7 +18,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 		err := requests.LoginRequest(loginApiUrl, email, password, w)
 		if err != nil {
-			http.Error(w, "ERROR: Bad request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

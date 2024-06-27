@@ -22,7 +22,7 @@ func DeleteAccountPage(w http.ResponseWriter, r *http.Request) {
 
 		err := requests.DeleteAccountRequest("http://localhost:8080/api/deleteaccount", password, cookie.Value)
 		if err != nil {
-			http.Error(w, "ERROR: Bad request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			fmt.Println(err)
 			return
 		}
