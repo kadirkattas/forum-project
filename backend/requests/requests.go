@@ -2,7 +2,6 @@ package requests
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -158,7 +157,7 @@ func RegisterRequest(apiURL string, email string, userName string, password stri
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error register: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -186,7 +185,9 @@ func LoginRequest(apiURL string, email string, password string, w http.ResponseW
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("login failed: " + resp.Status)
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		bodyString := string(bodyBytes)
+		return fmt.Errorf(bodyString)
 	}
 
 	db, errDb := database.OpenDb(w)
@@ -250,7 +251,7 @@ func CreatePostRequest(apiURL string, title string, content string, categoryData
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error creating post: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -282,7 +283,7 @@ func CreateCommentRequest(apiURL string, postId string, comment string, cookieVa
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error creating comment: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -315,7 +316,7 @@ func VoteRequest(apiURL string, id string, isComment string, postId string, cook
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error voting: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -346,7 +347,7 @@ func DeleteAccountRequest(apiURL string, password string, cookieValue string) er
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error deleting account: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -377,7 +378,7 @@ func DeletePostRequest(apiURL string, postId string, cookieValue string) error {
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error deleting account: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
@@ -408,7 +409,7 @@ func DeleteCommentRequest(apiURL string, commentId string, cookieValue string) e
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		return fmt.Errorf("error deleting account: %s", bodyString)
+		return fmt.Errorf(bodyString)
 	}
 
 	return nil
