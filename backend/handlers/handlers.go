@@ -66,6 +66,10 @@ func ImportHandlers() {
 	http.HandleFunc("/deletecomment", mycommentspage.DeleteMyComment)
 	http.HandleFunc("/myvotedposts", myvotedpostspage.MyVotedPostsPage)
 	http.HandleFunc("/search", searchedpostspage.SearchedPostsPage)
+	http.HandleFunc("/login/google", login.HandleGoogleLogin)
+	http.HandleFunc("/callback/google", login.HandleGoogleCallback)
+	http.HandleFunc("/login/github", login.HandleGitHubLogin)
+	http.HandleFunc("/callback/github", login.HandleGitHubCallback)
 
 	fs := http.FileServer(http.Dir("./frontend"))
 	http.Handle("/frontend/", http.StripPrefix("/frontend/", fs))
