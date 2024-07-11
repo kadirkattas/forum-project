@@ -70,6 +70,8 @@ func ImportHandlers() {
 	http.HandleFunc("/callback/google", login.HandleGoogleCallback)
 	http.HandleFunc("/login/github", login.HandleGitHubLogin)
 	http.HandleFunc("/callback/github", login.HandleGitHubCallback)
+	http.HandleFunc("/login/facebook", login.HandleFacebookLogin)
+	http.HandleFunc("/callback/facebook", login.HandleFacebookCallback)
 
 	fs := http.FileServer(http.Dir("./frontend"))
 	http.Handle("/frontend/", http.StripPrefix("/frontend/", fs))
