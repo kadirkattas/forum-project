@@ -73,6 +73,8 @@ func ImportHandlers() {
 	http.HandleFunc("/login/facebook", login.HandleFacebookLogin)
 	http.HandleFunc("/callback/facebook", login.HandleFacebookCallback)
 
+	http.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
+
 	fs := http.FileServer(http.Dir("./frontend"))
 	http.Handle("/frontend/", http.StripPrefix("/frontend/", fs))
 }

@@ -1,9 +1,11 @@
 package requests
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strings"
@@ -221,26 +223,51 @@ func LoginRequest(apiURL string, email string, password string, w http.ResponseW
 	return nil
 }
 
-func CreatePostRequest(apiURL string, title string, content string, categoryDatas map[string]string, cookieValue string) error {
-	formData := url.Values{}
-	formData.Set("title", title)
-	formData.Set("content", content)
+func CreatePostRequest(apiURL string, title string, content string, categoryDatas map[string]string, cookieValue string, photo io.Reader, photoFileName string) error {
+	// Multipart form oluşturma
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
 
-	for key, val := range categoryDatas {
-		formData.Set(key, val)
+	// Title ve content alanlarını ekleme
+	writer.WriteField("title", title)
+	writer.WriteField("content", content)
+
+	// Fotoğraf dosyasını ekleme
+	if photo != nil {
+		part, err := writer.CreateFormFile("photo", photoFileName)
+		if err != nil {
+			return fmt.Errorf("error creating form file: %v", err)
+		}
+		_, err = io.Copy(part, photo)
+		if err != nil {
+			return fmt.Errorf("error copying photo file: %v", err)
+		}
 	}
 
-	encodedFormData := formData.Encode()
+	// Kategorileri ekleme
+	for key, val := range categoryDatas {
+		writer.WriteField(key, val)
+	}
 
-	req, err := http.NewRequest("POST", apiURL, strings.NewReader(encodedFormData))
+	// Writer'ı kapatma
+	err := writer.Close()
+	if err != nil {
+		return fmt.Errorf("error closing writer: %v", err)
+	}
+
+	// HTTP isteği oluşturma
+	req, err := http.NewRequest("POST", apiURL, &body)
 	if err != nil {
 		return err
 	}
 
+	// Cookie ekleme
 	req.AddCookie(&http.Cookie{Name: "session_token", Value: cookieValue})
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	// Content-Type header'ını ayarlama
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 
+	// İstek gönderme
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
